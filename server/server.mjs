@@ -8,10 +8,12 @@ import rootRouter from "./src/routes/index.mjs";
 const server = express();
 server.use(express.json());
 
-server.use(cors({ 
-  origin: ["http://localhost:5173", "http://localhost:3000"], // Add your frontend URLs
-  credentials: true 
-}));
+const corsOptions ={
+    origin:'http://localhost:5173', 
+    credentials:true,            
+    optionSuccessStatus:200
+}
+server.use(cors(corsOptions))
 server.use(express.urlencoded({ extended: true }));
 
 server.get("/", (req, res) => {
