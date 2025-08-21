@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Box, TextField, Button, Link, Typography } from "@mui/material";
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
 const Register = ({ onLoginClick }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     userName: "",
     email: "",
@@ -19,9 +20,10 @@ const Register = ({ onLoginClick }) => {
 
     try {
       const response = await axios
-        .post("http://localhost:4001/api/vi/auth/register", formData)
+        .post("https://zippy-fascination-production.up.railway.app/api/vi/auth/register", formData)
         .then(() => {
           console.log("regisstration success");
+          navigate("/");
         });
     } catch (error) {
       console.error("Registration failed:", error.response.data.message);

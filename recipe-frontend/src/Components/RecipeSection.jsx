@@ -14,9 +14,12 @@ import {
   Box,
   Link,
 } from "@mui/material";
+import {jwtDecode} from "jwt-decode";
 
 export default function RecipeSection() {
   const recipeList = recipeStore((state) => state.recipeList);
+  const addToFavourite = recipeStore((state) => state.setFavouriteList); 
+  const listOfFav = recipeStore((state) => state.favList);
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(null);
   const handleOpen = (recipe) => {
@@ -37,11 +40,11 @@ export default function RecipeSection() {
       }
     }
     return items;
-  };
+  };  
   return (
     <>
       <List sx={{ width: "100%", bgcolor: "background.paper" }}>
-         {recipeList.map((recipe) => (
+        {recipeList.map((recipe) => (
           <React.Fragment key={recipe.idMeal}>
             <ListItem
               button
@@ -64,19 +67,13 @@ export default function RecipeSection() {
                 primary={recipe.strMeal}
                 secondary="Click to view details"
               />
-              <Button
-                variant="outlined"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  alert("Added to Favorites");
-                }}
-              >
+              <Button variant="outlined" onClick={()=>addToFavourite(recipe.idMeal ,recipe.strMeal ,recipe.strMealThumb  )}>
                 Add to Fav
               </Button>
             </ListItem>
             <Divider />
           </React.Fragment>
-        ))} 
+        ))}
       </List>
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
         {selected && (

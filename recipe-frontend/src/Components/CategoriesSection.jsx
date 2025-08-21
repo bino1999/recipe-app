@@ -14,7 +14,7 @@ const CategoriesSection = () => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4001/api/vi/recipe/all-category"
+          "https://zippy-fascination-production.up.railway.app/api/vi/recipe/all-category"
         );
         console.log(response.data);
         setCategories(response.data);
@@ -36,7 +36,6 @@ const CategoriesSection = () => {
     };
     displyInitialRecipe();
   }, [categories]);
-
 
   return (
     <>

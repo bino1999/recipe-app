@@ -45,14 +45,14 @@ const Login = ({ onRegisterClick }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:4001/api/vi/auth/login",
+        "https://zippy-fascination-production.up.railway.app/api/vi/auth/login",
         formData
       );
 
       if (response.data.token) {
         localStorage.setItem("authToken", response.data.token);
         login(response.data.token);
-        navigate("/Home");
+        navigate("/cat");
       }
     } catch (error) {
       console.error("Login failed:", error);
@@ -100,7 +100,7 @@ const Login = ({ onRegisterClick }) => {
         >
           {loading ? <CircularProgress size={24} color="inherit" /> : "Log in"}
         </Button>
-        
+
         <Typography variant="body2" align="center">
           Don't have an account?{" "}
           <Link href="#" onClick={onRegisterClick}>
