@@ -69,7 +69,7 @@ userRoutes.get("/favorites",protectAuthRoute, async (req, res) => {
 
 // Remove from Favorites
 
-userRoutes.delete("/favorites/:id", async (req, res) => {
+userRoutes.delete("/favorites/:id",protectAuthRoute, async (req, res) => {
   const recipeIdToRemove = req.params.id;
   try {
     const user = await User.findById(req.user._id);
@@ -94,7 +94,7 @@ userRoutes.delete("/favorites/:id", async (req, res) => {
   } catch (error) {
     console.error(`Error removing recipe from favorites: ${error.message}`);
     res.status(500).json({
-      message: "A server error prevented the recipe from being removed.",
+      message: "A server error",
     });
   }
 });

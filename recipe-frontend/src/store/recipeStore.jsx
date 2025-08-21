@@ -80,6 +80,34 @@ const recipeStore = create((set) => ({
       set({ isLoading: false });
     }
   },
+
+  removeFavoriteRecipe: async (recipeId) => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      console.error("Authentication token not found.");
+      return;
+    }
+    try {
+      set({ isLoading: true });
+      const response = await axios.delete(
+        `https://zippy-fascination-production.up.railway.app/api/vi/users/favorites/${recipeId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      set({ favList: response.data.favorites });
+      console.log("Recipe successfully removed ");
+    } catch (error) {
+      console.error(
+        "Failed to remove recipe",
+        error.response?.data?.message || error.message
+      );
+    } finally {
+      set({ isLoading: false });
+    }
+  },
 }));
 
 export default recipeStore;

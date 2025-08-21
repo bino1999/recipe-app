@@ -67,7 +67,10 @@ export default function RecipeSection() {
                 primary={recipe.strMeal}
                 secondary="Click to view details"
               />
-              <Button variant="outlined" onClick={()=>addToFavourite(recipe.idMeal ,recipe.strMeal ,recipe.strMealThumb  )}>
+              <Button variant="outlined" onClick={(event)=>{
+                event.stopPropagation();
+                addToFavourite(recipe.idMeal ,recipe.strMeal ,recipe.strMealThumb  )
+              }}>
                 Add to Fav
               </Button>
             </ListItem>
