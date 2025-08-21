@@ -2,7 +2,6 @@ import { Router } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.mjs";
-import { JWT_SECRET } from "../config/env.mjs";
 const authRouter = Router();
 
 authRouter.get("/", (req, res) => {
@@ -40,7 +39,7 @@ authRouter.post("/login", async (req, res) => {
   if (!isMatch) {
     return res.status(401).json({ message: "Incorrect Pasword" });
   }
-  const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
+  const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, {
     expiresIn: "1d",
   });
   res.json({
