@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import recipeStore from "../store/recipeStore";
 import {
   List,
@@ -13,15 +13,18 @@ import {
   Typography,
   Box,
   Link,
+  Container,
 } from "@mui/material";
-import {jwtDecode} from "jwt-decode";
+import { motion } from "framer-motion";
 
 export default function RecipeSection() {
-  const recipeList = recipeStore((state) => state.recipeList);
-  const addToFavourite = recipeStore((state) => state.setFavouriteList); 
-  const listOfFav = recipeStore((state) => state.favList);
+  const { recipeList, addToFavourite, getRelatedRecipe, isLoading, mainName } =recipeStore();
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(null);
+  useEffect(() => {
+    getRelatedRecipe(mainName);
+  }, [getRelatedRecipe, mainName]);
+
   const handleOpen = (recipe) => {
     setSelected(recipe);
     setOpen(true);
@@ -40,7 +43,39 @@ export default function RecipeSection() {
       }
     }
     return items;
-  };  
+  };
+  const loadingVariants = {
+    animate: {
+      scale: [1, 1.1, 1],
+      opacity: [1, 0.5, 1],
+      transition: {
+        duration: 1.5,
+        repeat: Infinity,
+        repeatType: "loop",
+      },
+    },
+  };
+  if (isLoading) {
+    return (
+      <Container sx={{ textAlign: "center", mt: 4 }}>
+        <motion.div
+          variants={loadingVariants}
+          animate="animate"
+          style={{ display: "inline-block" }}
+        >
+          <Typography variant="h5">Loading...</Typography>
+        </motion.div>
+      </Container>
+    );
+  }
+
+  if (recipeList.length === 0) {
+    return (
+      <Container sx={{ textAlign: "center", mt: 4 }}>
+        <Typography variant="h5">No recipes found for "{mainName}".</Typography>
+      </Container>
+    );
+  }
   return (
     <>
       <List sx={{ width: "100%", bgcolor: "background.paper" }}>
@@ -67,10 +102,19 @@ export default function RecipeSection() {
                 primary={recipe.strMeal}
                 secondary="Click to view details"
               />
-              <Button variant="outlined" onClick={(event)=>{
-                event.stopPropagation();
-                addToFavourite(recipe.idMeal ,recipe.strMeal ,recipe.strMealThumb  )
-              }}>
+              <Button
+                component={motion.button}
+                whileHover={{ scale: 1.1 }}
+                variant="outlined"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  addToFavourite(
+                    recipe.idMeal,
+                    recipe.strMeal,
+                    recipe.strMealThumb
+                  );
+                }}
+              >
                 Add to Fav
               </Button>
             </ListItem>

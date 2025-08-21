@@ -1,22 +1,27 @@
-import { Box, Typography, Button, Stack, TextField } from "@mui/material";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import recipeStore from "../store/recipeStore";
+import {
+  Box,
+  Typography,
+  Button,
+  Stack,
+  TextField,
+  Container,
+} from "@mui/material";
+import axios from "axios";
+import { motion } from "framer-motion";
 import RecipeSection from "./RecipeSection";
 const CategoriesSection = () => {
   const [categories, setCategories] = useState([]);
-  const [recipe, setRecipe] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const getRelatedRecipe = recipeStore((state) => state.getRelatedRecipe);
-  
-
   useEffect(() => {
     const fetchCategories = async () => {
+      setIsLoading(true);
       try {
         const response = await axios.get(
           "https://zippy-fascination-production.up.railway.app/api/vi/recipe/all-category"
         );
-        console.log(response.data);
         setCategories(response.data);
       } catch (error) {
         console.error("Failed to fetch categories:", error);
@@ -24,7 +29,6 @@ const CategoriesSection = () => {
         setIsLoading(false);
       }
     };
-
     fetchCategories();
   }, []);
 
@@ -35,28 +39,53 @@ const CategoriesSection = () => {
       }
     };
     displyInitialRecipe();
-  }, [categories]);
-
+  }, [categories, getRelatedRecipe]);
+  const loadingVariants = {
+    animate: {
+      scale: [1, 1.1, 1],
+      opacity: [1, 0.5, 1],
+      transition: {
+        duration: 1.5,
+        repeat: Infinity,
+        repeatType: "loop",
+      },
+    },
+  };
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 0.5 } },
+  };
+  if (isLoading) {
+    return (
+      <Container sx={{ textAlign: "center", mt: 4 }}>
+        <motion.div
+          variants={loadingVariants}
+          animate="animate"
+          style={{ display: "inline-block" }}
+        >
+          <Typography variant="h5">Loading categories...</Typography>
+        </motion.div>
+      </Container>
+    );
+  }
   return (
-    <>
+    <motion.div variants={containerVariants} initial="hidden" animate="visible">
       <Box sx={{ p: 2 }}>
         <Typography variant="h4" sx={{ mb: 2 }}>
           Categories
         </Typography>
-        <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
-          {categories.map((index) => {
-            return (
+        <Stack direction="row" spacing={1} sx={{ mb: 2, flexWrap: "wrap" }}>
+          {categories.map((category) => (
+            <motion.div key={category.idCategory} whileHover={{ scale: 1.1 }}>
               <Button
-                onClick={() => getRelatedRecipe(index.strCategory)}
-                key={index.idCategory}
-                variant= "outlined"
+                onClick={() => getRelatedRecipe(category.strCategory)}
+                variant="outlined"
               >
-                {index.strCategory}
+                {category.strCategory}
               </Button>
-            );
-          })}
+            </motion.div>
+          ))}
         </Stack>
-
         <Box sx={{ display: "flex", gap: 1 }}>
           <TextField fullWidth label="Search" variant="outlined" />
           <Button variant="contained" color="primary">
@@ -66,8 +95,7 @@ const CategoriesSection = () => {
       </Box>
 
       <RecipeSection />
-    </>
+    </motion.div>
   );
 };
-
 export default CategoriesSection;
