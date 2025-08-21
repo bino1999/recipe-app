@@ -22,6 +22,7 @@ const corsOptions = {
 };
 
 server.use(cors(corsOptions));
+server.use(cors({ origin: "*", credentials: true }));
 
 server.use(express.urlencoded({ extended: true }));
 
