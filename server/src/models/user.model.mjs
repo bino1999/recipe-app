@@ -20,6 +20,22 @@ const userSchema = new mongoose.Schema(
       required: true,
       minlength: 6,
     },
+    favoriteRecipes: [
+      {
+        id: {
+          type: String,
+          required: true,
+        },
+        name: {
+          type: String,
+          required: true,
+        },
+        image: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
   },
   {
     timestamps: true,
