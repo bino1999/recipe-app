@@ -8,11 +8,9 @@ import {
   Button,
   Box,
 } from "@mui/material";
-
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
-
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (token) {
@@ -32,37 +30,40 @@ const Header = () => {
       }
     }
   }, []);
-
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     setIsLoggedIn(false);
     navigate("/");
     window.location.reload();
   };
-
   const goToFavorites = () => {
-    navigate("/fav");
+  const token = localStorage.getItem("authToken");
+  if(token){
+   navigate("/fav");
+  }
+  else{
+    alert('you need to log first ')
+  }
+    
   };
-
   return (
     <AppBar position="static">
       <Toolbar>
         <Typography onClick={()=>navigate("/cat")} variant="h6" component="div" sx={{ flexGrow: 1 }}>
           My Recipe App
         </Typography>
-        {isLoggedIn && (
-          <Box>
-            <Button color="inherit" onClick={goToFavorites}>
-              My Favorites
-            </Button>
-            <Button color="inherit" onClick={handleLogout}>
-              Logout
-            </Button>
-          </Box>
-        )}
+          
+            <Box>
+              <Button color="inherit" onClick={goToFavorites}>
+                My Favorites
+              </Button>
+              <Button color="inherit" onClick={handleLogout}>
+                Logout
+              </Button>
+            </Box>
+         
       </Toolbar>
     </AppBar>
   );
 };
-
 export default Header;
