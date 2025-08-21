@@ -7,7 +7,22 @@ import rootRouter from "./src/routes/index.mjs";
 
 const server = express();
 server.use(express.json());
-server.use(cors());
+
+const allowedOrigins = ["http://localhost:5173"];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+};
+
+server.use(cors(corsOptions));
+
 server.use(express.urlencoded({ extended: true }));
 
 server.get("/", (req, res) => {
