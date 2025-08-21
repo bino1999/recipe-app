@@ -8,7 +8,7 @@ const server = express();
 server.use(express.json());
 const port = process.env.PORT || 4001;
 const corsOptions ={
-    origin:['http://localhost:5173','https://recipe-6cc496g7m-binodbandara-8628s-projects.vercel.app'],
+    origin:['http://localhost:5173','https://recipe-app-five-murex-86.vercel.app'],
     credentials:true,            
     optionSuccessStatus:200
 }
